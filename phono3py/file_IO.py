@@ -348,8 +348,8 @@ def write_imag_self_energy_at_grid_point(gp,
     if temperature is not None:
         gammas_filename += ("t%f" % temperature).rstrip('0').rstrip('\.') + "-"
 
-    for i in band_indices:
-        gammas_filename += "b%d" % (i + 1)
+#    for i in band_indices:
+#        gammas_filename += "b%d" % (i + 1)
 
     if scattering_event_class is not None:
         gammas_filename += "-c%d" % scattering_event_class
@@ -437,8 +437,8 @@ def write_linewidth_at_grid_point(gp,
     if sigma is not None:
         lw_filename += ("s%f" % sigma).rstrip('0') + "-"
 
-    for i in band_indices:
-        lw_filename += "b%d" % (i + 1)
+#    for i in band_indices:
+#        lw_filename += "b%d" % (i + 1)
 
     if filename is not None:
         lw_filename += ".%s" % filename
@@ -468,8 +468,8 @@ def write_frequency_shift(gp,
             fst_filename += ("s%f" % epsilon).rstrip('0') + "-"
         else:
             fst_filename += ("s%.3e" % epsilon) + "-"
-    for i in band_indices:
-        fst_filename += "b%d" % (i + 1)
+#    for i in band_indices:
+#        fst_filename += "b%d" % (i + 1)
     if filename is not None:
         fst_filename += ".%s" % filename
     elif not is_mesh_symmetry:

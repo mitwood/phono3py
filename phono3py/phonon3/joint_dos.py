@@ -146,9 +146,9 @@ class JointDos(object):
     def _run_c_with_g(self):
         self.set_phonons(self._triplets_at_q.ravel())
         if self._sigma is None:
-            f_max = np.max(self._frequencies) * 2
+            f_max = np.max(self._frequencies) * 1  #Normally 2 to calculate virtural modes
         else:
-            f_max = np.max(self._frequencies) * 2 + self._sigma * 4
+            f_max = np.max(self._frequencies) * 1 + self._sigma * 4
         f_max *= 1.005
         f_min = 0
         self._set_uniform_frequency_points(f_min, f_max)
@@ -184,12 +184,13 @@ class JointDos(object):
             else:
                 for j, n in enumerate(occ_phonons):
                     for k, l in list(np.ndindex(g.shape[3:])):
-                        jdos[j, i, 1] += np.dot(
-                            (n[:, 0, k] + n[:, 1, l] + 1) *
-                            g[0, :, 0, k, l], self._weights_at_q)
-                        jdos[j, i, 0] += np.dot((n[:, 0, k] - n[:, 1, l]) *
-                                                g[1, :, 0, k, l],
-                                                self._weights_at_q)
+#                        if (k > 6 and k < 16 and l > 6 and l <= 16):
+#                        if (k > 6 and k <= 84 and l > 6 and l <= 84):
+#                            print k,l, n[:, 0, k] , n[:, 1, l]
+                        jdos[j, i, 1] += np.dot((n[:, 0, k] + n[:, 1, l] + 1) * g[0, :, 0, k, l], self._weights_at_q)
+                        jdos[j, i, 0] += np.dot((n[:, 0, k] - n[:, 1, l]) * g[1, :, 0, k, l], self._weights_at_q)
+#                        jdos[j, i, 1] += np.dot((n[:, 0, k] + n[:, 1, l] + 1) , self._weights_at_q)
+#                        jdos[j, i, 0] += np.dot((n[:, 0, k] - n[:, 1, l]) , self._weights_at_q)
 
         self._joint_dos = jdos / num_mesh
 

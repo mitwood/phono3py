@@ -98,6 +98,7 @@ def get_parser():
                         is_symmetrize_fc3_q=False,
                         is_tetrahedron_method=False,
                         log_level=None,
+                        lammps_mode=None,
                         max_freepath=None,
                         masses=None,
                         mass_variances=None,
@@ -144,7 +145,8 @@ def get_parser():
                         write_grid_points=False,
                         write_phonon=False,
                         write_pp=False,
-                        write_LBTE_solution=False)
+                        write_LBTE_solution=False,
+                        perturbation=False)
     parser.add_argument(
         "--abinit", dest="abinit_mode", action="store_true",
         help="Invoke Abinit mode")
@@ -307,6 +309,9 @@ def get_parser():
     parser.add_argument(
         "--jdos", dest="is_joint_dos", action="store_true",
         help="Calculate joint density of states")
+    parser.add_argument(
+        "--lammps", dest="lammps_mode", action="store_true",
+        help="Invoke LAMMPS mode")
     parser.add_argument(
         "--lbte", dest="is_lbte", action="store_true",
         help="Calculate thermal conductivity LBTE with Chaput's method")
@@ -478,5 +483,8 @@ def get_parser():
     parser.add_argument(
         "conf_file", nargs='*',
         help="Phono3py configure file")
+    parser.add_argument(
+        "--perturbation", dest="perturbation", action="store_true",
+        help="Invoke a Gaussian Perturbation to Mode Occupations")
 
     return parser, deprecated

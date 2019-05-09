@@ -169,6 +169,11 @@ elif args.turbomole_mode:
     from phonopy.interface.turbomole import write_supercells_with_displacements
     distance_to_A = Bohr
     force_to_eVperA = Hartree / Bohr
+elif args.lammps_mode:
+    interface_mode = 'lammps'
+    from phonopy.interface.vasp import write_supercells_with_displacements
+    distance_to_A = None
+    force_to_eVperA = None
 else:
     interface_mode = 'vasp'
     from phonopy.interface.vasp import write_supercells_with_displacements

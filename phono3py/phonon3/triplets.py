@@ -4,14 +4,38 @@ import phonopy.structure.spglib as spg
 from phonopy.structure.symmetry import Symmetry
 from phonopy.structure.tetrahedron_method import TetrahedronMethod
 from phonopy.structure.grid_points import extract_ir_grid_points
+from phonopy.cui.settings import *
+#(get_perturbation,get_perturb_height,get_perturb_omega,get_perturb_sigma)
 
+perturbation = False
+#Settings.get_perturbation()
+perturb_height = 2.0
+#Settings.get_perturb_height()
+perturb_omega = 44.0
+#Settings.get_perturb_omega()
+perturb_sigma = 2.0
+#Settings.get_perturb_sigma()
 
 def gaussian(x, sigma):
     return 1.0 / np.sqrt(2 * np.pi) / sigma * np.exp(-x**2 / 2 / sigma**2)
 
 
 def occupation(x, t):
-    return 1.0 / (np.exp(THzToEv * x / (Kb * t)) - 1)
+    occ_size = np.shape(x)
+    bose_dist = np.zeros((occ_size[0],occ_size[1],occ_size[2]), dtype='float')
+    for i in range(0,occ_size[0]):
+            for k in range(0,occ_size[2]):
+                if perturbation:
+#(x[i,0,k]>45.0 and x[i,0,k]<48.0):
+                    bose_dist[i,0,k]=(perturb_height*gaussian(perturb_omega,perturb_sigma) + 1.0 / (np.exp(THzToEv * x[i,0,k] / (Kb * t)) - 1) )
+                    bose_dist[i,1,k]=(perturb_height*gaussian(perturb_omega,perturb_sigma) + 1.0 / (np.exp(THzToEv * x[i,1,k] / (Kb * t)) - 1) )
+#                    print i,j,k,x[i,j,k],bose_dist[i,j,k]
+                else:
+                    bose_dist[i,0,k]=( 1.0 / (np.exp(THzToEv * x[i,0,k] / (Kb * t)) - 1) )
+                    bose_dist[i,1,k]=( 1.0 / (np.exp(THzToEv * x[i,1,k] / (Kb * t)) - 1) )
+#                    print i,j,k,x[i,j,k],bose_dist[i,j,k]
+
+    return bose_dist
 
 
 def get_triplets_at_q(grid_point,

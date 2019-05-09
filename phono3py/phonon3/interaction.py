@@ -374,7 +374,7 @@ class Interaction(object):
                             self._band_indices,
                             self._symmetrize_fc3q,
                             self._cutoff_frequency)
-        self._interaction_strength *= self._unit_conversion
+        self._interaction_strength *= (self._unit_conversion/1.0) # Edit here to fudge the ph-ph interaction strengths
         self._g_zero = g_zero
 
     def _set_phonon_c(self, grid_points, verbose=False):
