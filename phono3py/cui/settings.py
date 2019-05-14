@@ -58,6 +58,7 @@ class Phono3pySettings(Settings):
         self._write_phonon = False
         self._write_pp = False
         self._write_LBTE_solution = False
+        self._perturbation = False
 
     def set_alm_options(self, alm_options):
         self._alm_options = alm_options
@@ -371,6 +372,15 @@ class Phono3pySettings(Settings):
     def get_write_LBTE_solution(self):
         return self._write_LBTE_solution
 
+    def get_write_LBTE_solution(self):
+        return self._write_LBTE_solution
+
+    def set_perturbation(self, perturbation):
+        self._perturbation = perturbation
+
+    def get_perturbation(self):
+        return self._perturbation
+
 
 class Phono3pyConfParser(ConfParser):
     def __init__(self, filename=None, args=None):
@@ -606,6 +616,11 @@ class Phono3pyConfParser(ConfParser):
         if 'write_LBTE_solution' in self._args:
             if self._args.write_LBTE_solution:
                 self._confs['write_LBTE_solution'] = '.true.'
+
+#        if 'perturbation' in self._args:
+#            if self._args.perturbation is not None:
+#                self._confs['perturbation'] = '.true.'
+#                self._confs['perturb_detail'] = " ".join(self._args.perturbation)
 
     def _parse_conf(self):
         self.parse_conf()
@@ -918,6 +933,17 @@ class Phono3pyConfParser(ConfParser):
                 elif confs['write_LBTE_solution'].lower() == '.true.':
                     self.set_parameter('write_LBTE_solution', True)
 
+            if conf_key == 'perturbation':
+                if confs['perturbation'].lower() == '.false.':
+                    self.set_parameter('perturbation', False)
+                elif confs['perturbation'].lower() == '.true.':
+                    self.set_parameter('perturbation', True)
+                    vals = [fracval(x) for x in confs['perturbation'].split()]
+                    if len(vals) != 3:
+                        self.setting_error("Perturbation is incorrectly set, needs position, width and height.")
+                    else:
+                        self.set_parameter('temperatures', vals)
+
     def _set_settings(self):
         self.set_settings()
         params = self._parameters
@@ -1143,3 +1169,8 @@ class Phono3pyConfParser(ConfParser):
         if 'write_LBTE_solution' in params:
             self._settings.set_write_LBTE_solution(
                 params['write_LBTE_solution'])
+
+        # Write direct solution of LBTE to hdf5 files
+        if 'perturbation' in params:
+            self._settings.set_perturbation(
+                params['perturbation'])
