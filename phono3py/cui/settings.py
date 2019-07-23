@@ -59,6 +59,7 @@ class Phono3pySettings(Settings):
         self._write_pp = False
         self._write_LBTE_solution = False
         self._perturbation = False
+        self._perturb_detail = None
 
     def set_alm_options(self, alm_options):
         self._alm_options = alm_options
@@ -942,7 +943,7 @@ class Phono3pyConfParser(ConfParser):
                     if len(vals) != 3:
                         self.setting_error("Perturbation is incorrectly set, needs position, width and height.")
                     else:
-                        self.set_parameter('temperatures', vals)
+                        self.set_parameter('perturb_detail', vals)
 
     def _set_settings(self):
         self.set_settings()
@@ -1172,5 +1173,4 @@ class Phono3pyConfParser(ConfParser):
 
         # Write direct solution of LBTE to hdf5 files
         if 'perturbation' in params:
-            self._settings.set_perturbation(
-                params['perturbation'])
+            self._settings.set_perturbation(params['perturbation'])

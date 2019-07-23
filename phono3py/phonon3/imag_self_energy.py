@@ -444,6 +444,7 @@ class ImagSelfEnergy(object):
             sys.exit(1)
 
     def _run_c_with_band_indices_with_g(self):
+        #print "run_c_with_band_indices_with_g"
         import phono3py._phono3py as phono3c
 
         if self._g_zero is None:
@@ -464,6 +465,7 @@ class ImagSelfEnergy(object):
         self._imag_self_energy *= self._unit_conversion
 
     def _run_c_detailed_with_band_indices_with_g(self):
+        #print "run_c_detailed_with_band_indices_with_g"
         import phono3py._phono3py as phono3c
 
         if self._g_zero is None:
@@ -492,6 +494,7 @@ class ImagSelfEnergy(object):
         self._imag_self_energy = self._ise_N + self._ise_U
 
     def _run_c_with_frequency_points_with_g(self):
+        #print "run_c_with_frequency_points_with_g"
         import phono3py._phono3py as phono3c
         num_band0 = self._pp_strength.shape[1]
         g_shape = list(self._g.shape)
@@ -516,6 +519,7 @@ class ImagSelfEnergy(object):
         self._imag_self_energy *= self._unit_conversion
 
     def _run_c_detailed_with_frequency_points_with_g(self):
+        #print "run_c_detailed_with_frequency_points_with_g"
         import phono3py._phono3py as phono3c
         num_band0 = self._pp_strength.shape[1]
         g_shape = list(self._g.shape)
@@ -559,6 +563,7 @@ class ImagSelfEnergy(object):
     def _ise_thm_with_band_indices(self):
         freqs = self._frequencies[self._triplets_at_q[:, [1, 2]]]
         freqs = np.where(freqs > self._cutoff_frequency, freqs, 1)
+        #print "Getting Populations"
         n = occupation(freqs, self._temperature)
         for i, (tp, w, interaction) in enumerate(zip(self._triplets_at_q,
                                                      self._weights_at_q,
@@ -583,6 +588,7 @@ class ImagSelfEnergy(object):
                                                  self._pp_strength)):
             for j, k in list(np.ndindex(interaction.shape[1:])):
                 g1 = self._g[0, i, :, j, k]
+                #print "Calc at 0K, no populations needed"
                 self._imag_self_energy[:] += g1 * interaction[:, j, k] * w
 
         self._imag_self_energy *= self._unit_conversion
@@ -602,6 +608,7 @@ class ImagSelfEnergy(object):
                 f2 = self._frequencies[tp[2]][k]
                 if (f1 > self._cutoff_frequency and
                     f2 > self._cutoff_frequency):
+                    #print "Getting Populations"
                     n2 = occupation(f1, self._temperature)
                     n3 = occupation(f2, self._temperature)
                     g1 = self._g[0, i, :, j, k]

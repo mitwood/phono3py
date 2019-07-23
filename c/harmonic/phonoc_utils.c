@@ -42,15 +42,31 @@
 #define THZTOEVPARKB 47.992398658977166
 #define INVSQRT2PI 0.3989422804014327
 
-double bose_einstein(const double x, const double t)
-{
-  return 1.0 / (exp(THZTOEVPARKB * x / t) - 1);
-}
+int perturbation = 0 ;
+double perturb_height = 2.0 ;
+double perturb_omega = 19.46 ;
+double perturb_sigma = 0.50 ;
+double bose_dist;
 
 double gaussian(const double x, const double sigma)
 {
   return INVSQRT2PI / sigma * exp(-x * x / 2 / sigma / sigma);
 }
+
+double bose_einstein(const double x, const double t)
+{
+  if (perturbation = 1) {
+    if (x >= 0.0) {
+      bose_dist = (perturb_height * gaussian((x - perturb_omega),perturb_sigma) + 1.0 /(exp(THZTOEVPARKB * x / t) - 1));
+      return bose_dist;
+                }
+    else {return 0.0;}
+                      }
+  else {
+    return (1.0 /(exp(THZTOEVPARKB * x / t) - 1));
+       }
+}
+
 
 double inv_sinh_occupation(const double x, const double t)
 {

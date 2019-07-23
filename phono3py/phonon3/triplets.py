@@ -7,13 +7,13 @@ from phonopy.structure.grid_points import extract_ir_grid_points
 from phonopy.cui.settings import *
 #(get_perturbation,get_perturb_height,get_perturb_omega,get_perturb_sigma)
 
-perturbation = True
+perturbation = False
 #Settings.get_perturbation()
-perturb_height = 1.0
+perturb_height = 2.0
 #Settings.get_perturb_height()
-perturb_omega = 5.0
+perturb_omega = 19.46
 #Settings.get_perturb_omega()
-perturb_sigma = 0.10
+perturb_sigma = 0.50
 #Settings.get_perturb_sigma()
 
 def gaussian(x, sigma):
@@ -27,12 +27,28 @@ def occupation(x, t):
             for k in range(0,occ_size[2]):
                 if perturbation:
 #(x[i,0,k]>45.0 and x[i,0,k]<48.0):
-                    bose_dist[i,0,k]=(perturb_height*gaussian(x[i,0,k]-perturb_omega,perturb_sigma) + 1.0 / (np.exp(THzToEv * x[i,0,k] / (Kb * t)) - 1) )
-                    bose_dist[i,1,k]=(perturb_height*gaussian(x[i,0,k]-perturb_omega,perturb_sigma) + 1.0 / (np.exp(THzToEv * x[i,1,k] / (Kb * t)) - 1) )
-                    print x[i,0,k],bose_dist[i,0,k],perturb_height*gaussian(x[i,0,k]-perturb_omega,perturb_sigma)
+                    if (x[i,0,k] >= 0.0 and x[i,1,k] >= 0.0):
+                        bose_dist[i,0,k]=(perturb_height*gaussian(x[i,0,k]-perturb_omega,perturb_sigma) + 1.0 / (np.exp(THzToEv * x[i,0,k] / (Kb * t)) - 1) )
+                        bose_dist[i,1,k]=(perturb_height*gaussian(x[i,0,k]-perturb_omega,perturb_sigma) + 1.0 / (np.exp(THzToEv * x[i,1,k] / (Kb * t)) - 1) )
+                        #bose_dist[i,0,k] /=(np.exp(THzToEv * x[i,0,k] / (Kb * t)) - 1)
+                        #bose_dist[i,0,k] /=(np.exp(THzToEv * x[i,1,k] / (Kb * t)) - 1)
+                        #bose_dist[i,1,k] /=(np.exp(THzToEv * x[i,0,k] / (Kb * t)) - 1)
+                        #bose_dist[i,1,k] /=(np.exp(THzToEv * x[i,1,k] / (Kb * t)) - 1)
+#                        print x[i,0,k],bose_dist[i,0,k],perturb_height*gaussian(x[i,0,k]-perturb_omega,perturb_sigma)
+                    else:
+                        bose_dist[i,0,k]=0.0
+                        bose_dist[i,1,k]=0.0
                 else:
-                    bose_dist[i,0,k]=( 1.0 / (np.exp(THzToEv * x[i,0,k] / (Kb * t)) - 1) )
-                    bose_dist[i,1,k]=( 1.0 / (np.exp(THzToEv * x[i,1,k] / (Kb * t)) - 1) )
+                    if (x[i,0,k] >= 0.0 and x[i,1,k] >= 0.0):
+                        bose_dist[i,0,k]=( 1.0 / (np.exp(THzToEv * x[i,0,k] / (Kb * t)) - 1) )
+                        bose_dist[i,1,k]=( 1.0 / (np.exp(THzToEv * x[i,1,k] / (Kb * t)) - 1) )
+                        #bose_dist[i,0,k] /=(np.exp(THzToEv * x[i,0,k] / (Kb * t)) - 1)
+                        #bose_dist[i,0,k] /=(np.exp(THzToEv * x[i,1,k] / (Kb * t)) - 1)
+                        #bose_dist[i,1,k] /=(np.exp(THzToEv * x[i,0,k] / (Kb * t)) - 1)
+                        #bose_dist[i,1,k] /=(np.exp(THzToEv * x[i,1,k] / (Kb * t)) - 1)
+                    else:
+                        bose_dist[i,0,k]=0.0
+                        bose_dist[i,1,k]=0.0
 #                    print i,j,k,x[i,j,k],bose_dist[i,j,k]
 
     return bose_dist
